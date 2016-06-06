@@ -5,31 +5,35 @@ require_relative 'item'
 class Receipt
   #reciepts are read-only.
   #The user doesn't need to write anything on the receipt
-  attr_reader :item_list, :total, :total_sales_tax
+  attr_reader :item_list
+  attr_accessor :total_tax, :total
 
   #Container to store the collection of items
   def initialize
     @item_list = []
     @total = 0
-    @total_sales_tax = 0
+    @total_tax = 0
   end
 
     #Add a new item to the collection of items
     def add(item)
       @item_list << item #Shovel/push new item into the @item_list array
-      @total_sales_tax += item.tax_calculations #Running tax calcutions on each item
-      @total += item.total_price #Runing total_price method on each item incrementing each time
-      # @total = @total + item.total_price longhand
+      # @total_tax = "#{@sales_tax} #{@import_tax}" #Running tax calcutions on each item
+      @total_tax += item.tax_calculations
+      # puts "#{@total_tax} hello"
+      @total += item.tax_calculations + item.price #Runing total method on each item incrementing each time
+      # @total = @total + item.total longhand
     end
 
     ##Print out reciept with list of items
     def print_receipt
       item_list.each do |item|
+        # puts "#{@total_tax}"
         p "#{item.name}: #{(item.price).round(2)}"
       end
       ##prints sales tax and totals
-      p "Sales Tax: #{total_sales_tax.round(2)}"
-      p "Total: #{total.round(2)}"
+      p "Sales Tax: #{@total_tax.round(2)}"
+      p "Total: #{@total.round(2)}"
     end
 
 end
@@ -53,7 +57,7 @@ imported_perfume = Item.new("Imported Bottle of Perfume", 47.50, "true", "true")
 
 ####Creating new receipt
 receipt1 = Receipt.new
-####Adding items to receipt1
+###Adding items to receipt1
 receipt1.add(book)
 receipt1.add(music_cd)
 receipt1.add(chocolate_bar)
